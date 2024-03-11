@@ -758,6 +758,7 @@ fn test_solarish(target: &str) {
 
     headers! {
         cfg:
+        "aio.h",
         "ctype.h",
         "dirent.h",
         "dlfcn.h",
@@ -908,6 +909,14 @@ fn test_solarish(target: &str) {
         }
     });
 
+    cfg.volatile_item(|i| {
+        use ctest::VolatileItemKind::*;
+        match i {
+            StructField(ref n, ref f) if n == "aiocb" && f == "aio_buf" => true,
+            _ => false,
+        }
+    });
+
     cfg.skip_field(move |s, field| {
         match s {
             // C99 sizing on this is tough
@@ -985,6 +994,9 @@ fn test_solarish(target: &str) {
             // Until better symbol binding story is figured out, it must be
             // excluded from the tests.
             "getifaddrs" if is_illumos => true,
+
+            // Soundness.
+            "lio_listio" => true,
 
             _ => false,
         }

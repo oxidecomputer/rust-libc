@@ -1,0 +1,14 @@
+AIO_ALLDONE
+AIO_CANCELED
+AIO_NOTCANCELED
+LIO_NOWAIT
+LIO_WAIT
+aio_cancel
+aio_error
+aio_fsync
+aio_read
+aio_return
+aio_suspend
+aio_write
+aiocb
+lio_listio

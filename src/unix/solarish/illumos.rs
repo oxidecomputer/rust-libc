@@ -19,6 +19,24 @@ s! {
         pub fi_pos: ::c_int,
         pub fi_name: [::c_char; ::FILNAME_MAX as usize],
     }
+
+    pub struct aio_result_t {
+        pub aio_return: ::ssize_t,
+        pub aio_errno: ::c_int,
+    }
+
+    pub struct aiocb {
+        pub aio_fildes: ::c_int,
+        pub aio_buf: *mut ::c_void,
+        pub aio_nbytes: ::size_t,
+        pub aio_offset: ::off_t,
+        pub aio_reqprio: ::c_int,
+        pub aio_sigevent: ::sigevent,
+        pub aio_lio_opcode: ::c_int,
+        pub aio_resultp: aio_result_t,
+        pub aio_state: ::c_int,
+        pub aio__pad: [::c_int; 1],
+    }
 }
 
 pub const AF_LOCAL: ::c_int = 1; // AF_UNIX
@@ -56,6 +74,17 @@ pub const SOL_FILTER: ::c_int = 0xfffc;
 
 pub const MADV_PURGE: ::c_int = 9;
 
+pub const AIO_CANCELED: ::c_int = 0;
+pub const AIO_ALLDONE: ::c_int = 1;
+pub const AIO_NOTCANCELED: ::c_int = 2;
+
+pub const LIO_NOWAIT: ::c_int = 0;
+pub const LIO_WAIT: ::c_int = 1;
+
+pub const LIO_NOP: ::c_int = 0;
+pub const LIO_READ: ::c_int = 0x01;
+pub const LIO_WRITE: ::c_int = 0x02;
+
 pub const B1000000: ::speed_t = 24;
 pub const B1152000: ::speed_t = 25;
 pub const B1500000: ::speed_t = 26;
@@ -85,4 +114,22 @@ extern "C" {
     pub fn pwritev(fd: ::c_int, iov: *const ::iovec, iovcnt: ::c_int, offset: ::off_t)
         -> ::ssize_t;
     pub fn getpagesizes2(pagesize: *mut ::size_t, nelem: ::c_int) -> ::c_int;
+
+    pub fn aio_cancel(fd: ::c_int, aiocbp: *mut aiocb) -> ::c_int;
+    pub fn aio_error(aiocbp: *const aiocb) -> ::c_int;
+    pub fn aio_fsync(op: ::c_int, aiocbp: *mut aiocb) -> ::c_int;
+    pub fn aio_read(aiocbp: *mut aiocb) -> ::c_int;
+    pub fn aio_return(aiocbp: *mut aiocb) -> ::ssize_t;
+    pub fn aio_suspend(
+        aiocb_list: *const *const aiocb,
+        nitems: ::c_int,
+        timeout: *const ::timespec,
+    ) -> ::c_int;
+    pub fn aio_write(aiocbp: *mut aiocb) -> ::c_int;
+    pub fn lio_listio(
+        mode: ::c_int,
+        aiocb_list: *const *mut aiocb,
+        nitems: ::c_int,
+        sevp: *mut ::sigevent,
+    ) -> ::c_int;
 }
