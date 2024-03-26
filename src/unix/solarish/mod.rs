@@ -1215,6 +1215,7 @@ pub const SIG_SETMASK: ::c_int = 3;
 pub const SIGEV_NONE: ::c_int = 1;
 pub const SIGEV_SIGNAL: ::c_int = 2;
 pub const SIGEV_THREAD: ::c_int = 3;
+pub const SIGEV_PORT: ::c_int = 4;
 
 pub const CLD_EXITED: ::c_int = 1;
 pub const CLD_KILLED: ::c_int = 2;
